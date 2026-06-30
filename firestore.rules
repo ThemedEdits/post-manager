@@ -1,0 +1,13 @@
+// Copy these into Firebase Console → Firestore Database → Rules,
+// then click "Publish". Your database is currently in test mode,
+// which means ANYONE can read/write your data — these rules lock it
+// down so each user can only access their own clients/posts.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/clients/{clientId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
