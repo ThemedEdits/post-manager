@@ -43,7 +43,10 @@
         <img id="userPhoto" class="user-photo" src="" alt="">
         <span id="userName" class="user-name"></span>
       </div>
-      <button id="signOutBtn" class="btn btn-ghost" title="Sign out">Sign out</button>
+      <button id="signOutBtn" class="btn btn-ghost" title="Sign out">
+        <i data-lucide="log-out" class="btn-icon"></i>
+        <span class="signout-label">Sign out</span>
+      </button>
     </div>
   </header>
 
@@ -54,15 +57,59 @@
         <p class="page-sub" id="grandSummary">No clients yet — add your first one.</p>
       </div>
       <button id="addClientBtn" class="btn btn-primary">
-        <span class="plus">+</span> Add client
+        <i data-lucide="plus" class="btn-icon"></i> Add client
       </button>
     </div>
 
+    <!-- TOOLBAR: search + filter + sort -->
+    <div class="toolbar surface" id="toolbar">
+      <div class="toolbar-row1">
+        <div class="search-wrap">
+          <i data-lucide="search" class="search-icon"></i>
+          <input type="search" id="searchInput" placeholder="Search clients…" autocomplete="off">
+          <button id="clearSearch" class="clear-btn hidden" aria-label="Clear search">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="sort-wrap">
+          <i data-lucide="arrow-up-down" class="sort-icon"></i>
+          <select id="sortSelect" aria-label="Sort clients">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="name-asc">Name A → Z</option>
+            <option value="name-desc">Name Z → A</option>
+            <option value="total-desc">Total: High → Low</option>
+            <option value="total-asc">Total: Low → High</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-chips" id="filterChips">
+        <button class="chip chip-active" data-filter="all">All</button>
+        <button class="chip" data-filter="active">Has posts</button>
+        <button class="chip" data-filter="empty">No posts yet</button>
+      </div>
+    </div>
+
     <div id="emptyState" class="empty-state glass hidden">
-      <div class="empty-icon">＋</div>
+      <div class="empty-icon">
+        <i data-lucide="users" style="width:22px;height:22px"></i>
+      </div>
       <h3>No clients yet</h3>
       <p>Add a client to start logging posts, even before you've agreed on numbers.</p>
-      <button class="btn btn-primary" id="emptyAddBtn">Add your first client</button>
+      <button class="btn btn-primary" id="emptyAddBtn">
+        <i data-lucide="plus" class="btn-icon"></i> Add your first client
+      </button>
+    </div>
+
+    <div id="noResults" class="empty-state glass hidden">
+      <div class="empty-icon">
+        <i data-lucide="search-x" style="width:22px;height:22px"></i>
+      </div>
+      <h3>No matches</h3>
+      <p id="noResultsMsg">Try a different search or filter.</p>
+      <button class="btn btn-ghost" id="clearFiltersBtn">
+        <i data-lucide="x-circle" class="btn-icon"></i> Clear filters
+      </button>
     </div>
 
     <div id="clientList" class="client-list"></div>
@@ -74,7 +121,9 @@
   <div class="modal glass">
     <div class="modal-head">
       <h2 id="clientModalTitle">Add client</h2>
-      <button class="icon-btn" data-close-modal>✕</button>
+      <button class="icon-btn" data-close-modal aria-label="Close">
+        <i data-lucide="x"></i>
+      </button>
     </div>
     <form id="clientForm">
       <label class="field">
@@ -98,7 +147,9 @@
   <div class="modal glass">
     <div class="modal-head">
       <h2 id="postModalTitle">Add post</h2>
-      <button class="icon-btn" data-close-modal>✕</button>
+      <button class="icon-btn" data-close-modal aria-label="Close">
+        <i data-lucide="x"></i>
+      </button>
     </div>
     <form id="postForm">
       <label class="field">
@@ -128,18 +179,23 @@
   <div class="modal glass modal-sm">
     <div class="modal-head">
       <h2 id="confirmTitle">Delete this?</h2>
-      <button class="icon-btn" data-close-modal>✕</button>
+      <button class="icon-btn" data-close-modal aria-label="Close">
+        <i data-lucide="x"></i>
+      </button>
     </div>
     <p id="confirmBody" class="confirm-body">This can't be undone.</p>
     <div class="modal-actions">
       <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
-      <button type="button" id="confirmActionBtn" class="btn btn-danger">Delete</button>
+      <button type="button" id="confirmActionBtn" class="btn btn-danger">
+        <i data-lucide="trash-2" class="btn-icon"></i> Delete
+      </button>
     </div>
   </div>
 </div>
 
 <div id="toast" class="toast hidden"></div>
 
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script type="module" src="firebase-config.js"></script>
 <script type="module" src="app.js"></script>
 </body>
