@@ -32,43 +32,42 @@ let filterType = "all";   // "all" | "active" | "empty"
 let sortBy = "newest";    // "newest"|"oldest"|"name-asc"|"name-desc"|"total-desc"|"total-asc"
 
 /* ---------------- dom refs ---------------- */
-const loginScreen   = document.getElementById("loginScreen");
-const appEl         = document.getElementById("app");
+const loginScreen = document.getElementById("loginScreen");
+const appEl = document.getElementById("app");
 const googleSignInBtn = document.getElementById("googleSignInBtn");
-const signOutBtn    = document.getElementById("signOutBtn");
-const userPhoto     = document.getElementById("userPhoto");
-const userName      = document.getElementById("userName");
+const signOutBtn = document.getElementById("signOutBtn");
+const userPhoto = document.getElementById("userPhoto");
+const userName = document.getElementById("userName");
 
-const addClientBtn  = document.getElementById("addClientBtn");
-const emptyAddBtn   = document.getElementById("emptyAddBtn");
-const emptyState    = document.getElementById("emptyState");
-const noResults     = document.getElementById("noResults");
-const noResultsMsg  = document.getElementById("noResultsMsg");
+const addClientBtn = document.getElementById("addClientBtn");
+const emptyAddBtn = document.getElementById("emptyAddBtn");
+const emptyState = document.getElementById("emptyState");
+const noResults = document.getElementById("noResults");
+const noResultsMsg = document.getElementById("noResultsMsg");
 const clearFiltersBtn = document.getElementById("clearFiltersBtn");
-const clientList    = document.getElementById("clientList");
-const grandSummary  = document.getElementById("grandSummary");
+const clientList = document.getElementById("clientList");
+const grandSummary = document.getElementById("grandSummary");
 
-const searchInput   = document.getElementById("searchInput");
-const clearSearch   = document.getElementById("clearSearch");
-const sortSelect    = document.getElementById("sortSelect");
-const filterChips   = document.getElementById("filterChips");
+const searchInput = document.getElementById("searchInput");
+const clearSearch = document.getElementById("clearSearch");
+const filterChips = document.getElementById("filterChips");
 
-const clientModal     = document.getElementById("clientModal");
+const clientModal = document.getElementById("clientModal");
 const clientModalTitle = document.getElementById("clientModalTitle");
-const clientForm      = document.getElementById("clientForm");
+const clientForm = document.getElementById("clientForm");
 const clientNameInput = document.getElementById("clientNameInput");
 const clientRateInput = document.getElementById("clientRateInput");
 
-const postModal     = document.getElementById("postModal");
+const postModal = document.getElementById("postModal");
 const postModalTitle = document.getElementById("postModalTitle");
-const postForm      = document.getElementById("postForm");
-const postTitleInput  = document.getElementById("postTitleInput");
-const postQtyInput    = document.getElementById("postQtyInput");
-const postPriceInput  = document.getElementById("postPriceInput");
+const postForm = document.getElementById("postForm");
+const postTitleInput = document.getElementById("postTitleInput");
+const postQtyInput = document.getElementById("postQtyInput");
+const postPriceInput = document.getElementById("postPriceInput");
 
-const confirmModal    = document.getElementById("confirmModal");
-const confirmTitle    = document.getElementById("confirmTitle");
-const confirmBody     = document.getElementById("confirmBody");
+const confirmModal = document.getElementById("confirmModal");
+const confirmTitle = document.getElementById("confirmTitle");
+const confirmBody = document.getElementById("confirmBody");
 const confirmActionBtn = document.getElementById("confirmActionBtn");
 
 const toastEl = document.getElementById("toast");
@@ -145,17 +144,17 @@ function getFilteredSorted() {
 
   // 2. chip filter
   if (filterType === "active") list = list.filter(c => (c.posts || []).length > 0);
-  if (filterType === "empty")  list = list.filter(c => (c.posts || []).length === 0);
+  if (filterType === "empty") list = list.filter(c => (c.posts || []).length === 0);
 
   // 3. sort
   list.sort((a, b) => {
     switch (sortBy) {
-      case "oldest":     return (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0);
-      case "name-asc":   return a.name.localeCompare(b.name);
-      case "name-desc":  return b.name.localeCompare(a.name);
+      case "oldest": return (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0);
+      case "name-asc": return a.name.localeCompare(b.name);
+      case "name-desc": return b.name.localeCompare(a.name);
       case "total-desc": return clientTotal(b) - clientTotal(a);
-      case "total-asc":  return clientTotal(a) - clientTotal(b);
-      default:           return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0); // newest
+      case "total-asc": return clientTotal(a) - clientTotal(b);
+      default: return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0); // newest
     }
   });
 
@@ -177,10 +176,6 @@ clearSearch.addEventListener("click", () => {
   render();
 });
 
-sortSelect.addEventListener("change", () => {
-  sortBy = sortSelect.value;
-  render();
-});
 
 filterChips.addEventListener("click", e => {
   const chip = e.target.closest("[data-filter]");
@@ -197,10 +192,51 @@ clearFiltersBtn.addEventListener("click", () => {
   clearSearch.classList.add("hidden");
   filterType = "all";
   sortBy = "newest";
-  sortSelect.value = "newest";
+  sortBtnLabel.textContent = "Newest first";
+  sortDropdown.querySelectorAll(".sort-option").forEach(o => {
+    o.classList.toggle("sort-option-active", o.dataset.sort === "newest");
+  });
   filterChips.querySelectorAll(".chip").forEach(c => c.classList.remove("chip-active"));
   filterChips.querySelector("[data-filter='all']").classList.add("chip-active");
   render();
+});
+
+const sortBtn = document.getElementById("sortBtn");
+const sortBtnLabel = document.getElementById("sortBtnLabel");
+const sortDropdown = document.getElementById("sortDropdown");
+
+function closeSortDropdown() {
+  sortDropdown.classList.remove("open");
+  sortBtn.setAttribute("aria-expanded", "false");
+}
+
+sortBtn.addEventListener("click", e => {
+  e.stopPropagation();
+  const isOpen = sortDropdown.classList.contains("open");
+  if (isOpen) { closeSortDropdown(); }
+  else {
+    sortDropdown.classList.add("open");
+    sortBtn.setAttribute("aria-expanded", "true");
+  }
+});
+
+sortDropdown.addEventListener("click", e => {
+  const opt = e.target.closest(".sort-option");
+  if (!opt) return;
+  sortBy = opt.dataset.sort;
+  sortBtnLabel.textContent = opt.textContent;
+  sortDropdown.querySelectorAll(".sort-option").forEach(o => o.classList.remove("sort-option-active"));
+  opt.classList.add("sort-option-active");
+  closeSortDropdown();
+  render();
+});
+
+document.addEventListener("click", e => {
+  if (!e.target.closest("#sortWrap")) closeSortDropdown();
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeSortDropdown();
 });
 
 /* ---------------- auth ---------------- */
@@ -377,8 +413,8 @@ function renderClientCard(client) {
     <div class="client-body">
       <div class="client-body-inner-wrap"><div class="client-body-inner">
         ${posts.length
-          ? posts.map(p => renderPostRow(client, p)).join("")
-          : `<div class="no-posts">No posts logged yet for this client.</div>`}
+      ? posts.map(p => renderPostRow(client, p)).join("")
+      : `<div class="no-posts">No posts logged yet for this client.</div>`}
         <button class="add-post-btn" data-add-post="${client.id}">
           <i data-lucide="plus"></i> Add post
         </button>
@@ -415,12 +451,12 @@ function renderPostRow(client, post) {
 
 /* ---------------- delegated event listener ---------------- */
 clientList.addEventListener("click", e => {
-  const stepBtn      = e.target.closest("[data-step]");
+  const stepBtn = e.target.closest("[data-step]");
   const delClientBtn = e.target.closest("[data-delete-client]");
-  const addPostBtn   = e.target.closest("[data-add-post]");
-  const editPostBtn  = e.target.closest("[data-edit-post]");
-  const delPostBtn   = e.target.closest("[data-delete-post]");
-  const toggle       = e.target.closest("[data-toggle]");
+  const addPostBtn = e.target.closest("[data-add-post]");
+  const editPostBtn = e.target.closest("[data-edit-post]");
+  const delPostBtn = e.target.closest("[data-delete-post]");
+  const toggle = e.target.closest("[data-toggle]");
 
   if (stepBtn) {
     stepQty(stepBtn.dataset.client, stepBtn.dataset.post, Number(stepBtn.dataset.step));
@@ -441,14 +477,14 @@ clientList.addEventListener("click", e => {
   }
   if (editPostBtn) {
     const client = clients.find(c => c.id === editPostBtn.dataset.client);
-    const post   = client && (client.posts || []).find(p => p.id === editPostBtn.dataset.editPost);
+    const post = client && (client.posts || []).find(p => p.id === editPostBtn.dataset.editPost);
     if (client && post) openPostModal(client, post);
     return;
   }
   if (delPostBtn) {
     const client = clients.find(c => c.id === delPostBtn.dataset.client);
     const postId = delPostBtn.dataset.deletePost;
-    const post   = client && (client.posts || []).find(p => p.id === postId);
+    const post = client && (client.posts || []).find(p => p.id === postId);
     if (!client) return;
     askConfirm("Delete post?",
       `This removes "${post ? post.title : "this post"}" from ${client.name}.`,
@@ -467,7 +503,7 @@ clientList.addEventListener("click", e => {
     try {
       const prev = JSON.parse(cardSig.get(id) || "{}");
       cardSig.set(id, JSON.stringify({ ...prev, open: openCards.has(id) }));
-    } catch (_) {}
+    } catch (_) { }
   }
 });
 
@@ -482,14 +518,14 @@ function stepQty(clientId, postId, delta) {
 
   const card = cardEls.get(clientId);
   if (card) {
-    const qtyEl    = card.querySelector(`[data-qty-for="${postId}"]`);
-    const totalEl  = card.querySelector(`[data-total-for="${postId}"]`);
-    if (qtyEl)   qtyEl.textContent  = post.qty;
+    const qtyEl = card.querySelector(`[data-qty-for="${postId}"]`);
+    const totalEl = card.querySelector(`[data-total-for="${postId}"]`);
+    if (qtyEl) qtyEl.textContent = post.qty;
     if (totalEl) totalEl.textContent = `PKR ${money(post.qty * (Number(post.price) || 0))}`;
-    const total    = clientTotal(client);
-    const amtEl    = card.querySelector(".client-total-amt");
-    const footEl   = card.querySelector(".client-footer-total span:last-child");
-    if (amtEl)  amtEl.textContent  = `PKR ${money(total)}`;
+    const total = clientTotal(client);
+    const amtEl = card.querySelector(".client-total-amt");
+    const footEl = card.querySelector(".client-footer-total span:last-child");
+    if (amtEl) amtEl.textContent = `PKR ${money(total)}`;
     if (footEl) footEl.textContent = `PKR ${money(total)}`;
   }
 
@@ -503,7 +539,7 @@ function stepQty(clientId, postId, delta) {
   try {
     const prev = JSON.parse(cardSig.get(clientId) || "{}");
     cardSig.set(clientId, JSON.stringify({ ...prev, posts: client.posts }));
-  } catch (_) {}
+  } catch (_) { }
 
   clearTimeout(pendingWrites.get(postId));
   pendingWrites.set(postId, setTimeout(() => {
@@ -548,9 +584,9 @@ let postModalContext = { clientId: null, postId: null };
 function openPostModal(client, post) {
   postModalContext = { clientId: client.id, postId: post ? post.id : null };
   postModalTitle.textContent = post ? "Edit post" : "Add post";
-  postTitleInput.value  = post ? post.title : "";
-  postQtyInput.value    = post ? post.qty   : 1;
-  postPriceInput.value  = post ? post.price : (client.rate || "");
+  postTitleInput.value = post ? post.title : "";
+  postQtyInput.value = post ? post.qty : 1;
+  postPriceInput.value = post ? post.price : (client.rate || "");
   openModal(postModal);
   setTimeout(() => postTitleInput.focus(), 50);
   openCards.add(client.id);
@@ -562,7 +598,7 @@ postForm.addEventListener("submit", async e => {
   const client = clients.find(c => c.id === clientId);
   if (!client) return;
   const title = postTitleInput.value.trim();
-  const qty   = Math.max(0, parseInt(postQtyInput.value, 10) || 0);
+  const qty = Math.max(0, parseInt(postQtyInput.value, 10) || 0);
   const price = Math.max(0, parseFloat(postPriceInput.value) || 0);
   if (!title) return;
   let posts = client.posts || [];
@@ -586,7 +622,7 @@ postForm.addEventListener("submit", async e => {
 let confirmAction = null;
 function askConfirm(title, body, action) {
   confirmTitle.textContent = title;
-  confirmBody.textContent  = body;
+  confirmBody.textContent = body;
   confirmAction = action;
   openModal(confirmModal);
 }
