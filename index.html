@@ -4,11 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
-  <title>Ledger — Client &amp; Post Tracker</title>
+  <title>Ledger - Client &amp; Post Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="logo.svg">
+  <link rel="apple-touch-icon" href="logo.svg">
 </head>
 
 <body>
@@ -82,20 +84,20 @@
             </button>
           </div>
           <div class="sort-wrap" id="sortWrap">
-  <button type="button" class="sort-btn" id="sortBtn" aria-haspopup="listbox" aria-expanded="false">
-    <i data-lucide="arrow-up-down" class="sort-icon-btn"></i>
-    <span id="sortBtnLabel">Newest first</span>
-    <i data-lucide="chevron-down" class="sort-chevron"></i>
-  </button>
-  <ul class="sort-dropdown" id="sortDropdown" role="listbox" aria-label="Sort clients">
-    <li role="option" data-sort="newest"     class="sort-option sort-option-active">Newest first</li>
-    <li role="option" data-sort="oldest"     class="sort-option">Oldest first</li>
-    <li role="option" data-sort="name-asc"   class="sort-option">Name A → Z</li>
-    <li role="option" data-sort="name-desc"  class="sort-option">Name Z → A</li>
-    <li role="option" data-sort="total-desc" class="sort-option">Total: High → Low</li>
-    <li role="option" data-sort="total-asc"  class="sort-option">Total: Low → High</li>
-  </ul>
-</div>
+            <button type="button" class="sort-btn" id="sortBtn" aria-haspopup="listbox" aria-expanded="false">
+              <i data-lucide="arrow-up-down" class="sort-icon-btn"></i>
+              <span id="sortBtnLabel">Newest first</span>
+              <i data-lucide="chevron-down" class="sort-chevron"></i>
+            </button>
+            <ul class="sort-dropdown" id="sortDropdown" role="listbox" aria-label="Sort clients">
+              <li role="option" data-sort="newest" class="sort-option sort-option-active">Newest first</li>
+              <li role="option" data-sort="oldest" class="sort-option">Oldest first</li>
+              <li role="option" data-sort="name-asc" class="sort-option">Name A → Z</li>
+              <li role="option" data-sort="name-desc" class="sort-option">Name Z → A</li>
+              <li role="option" data-sort="total-desc" class="sort-option">Total: High → Low</li>
+              <li role="option" data-sort="total-asc" class="sort-option">Total: Low → High</li>
+            </ul>
+          </div>
         </div>
         <div class="filter-chips" id="filterChips">
           <button class="chip chip-active" data-filter="all">All</button>
